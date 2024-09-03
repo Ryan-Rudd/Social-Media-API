@@ -33,6 +33,8 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  sessionToken: { type: String },  // Field for session token
+
   avatar: {
     type: String, // URL to the user's profile picture
     default: 'https://example.com/default-avatar.png',

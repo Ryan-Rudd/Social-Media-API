@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const logger = require('../utils/logger');
 require('dotenv').config()
+
 /**
  * Registers a new user.
  * @param {string} name - The name of the new user.
@@ -84,15 +85,12 @@ const loginUser = async(res, username, password) => {
     try {
         database.connectDB();
 
-        // Find the user by username and select the password field
         const user = await User.findOne({ username }).select('+password');
-
         if (!user) {
             return responseFormatter.errorResponse(res, 400, "Invalid Username or Password", "Authentication failed");
         }
 
         const isMatch = await user.matchPassword(password);
-
         if (!isMatch) {
             return responseFormatter.errorResponse(res, 400, "Invalid Username or Password", "Authentication failed");
         }
@@ -107,8 +105,13 @@ const loginUser = async(res, username, password) => {
         jwt.sign(
             payload,
             process.env.JWT_SECRET,
-            (err, token) => {
+            async (err, token) => {
                 if (err) throw err;
+                
+                // Save the session token in the user's record
+                user.sessionToken = token;
+                await user.save();
+
                 responseFormatter.successResponse(res, 200, "Login successful", { token });
             }
         );
@@ -119,5 +122,34 @@ const loginUser = async(res, username, password) => {
     }
 }
 
+/**
+ * Logs out a user by deleting their session token.
+ * @param {Object} res - The response object.
+ * @param {string} username - The username of the user.
+*/
+const logoutUser = async(res, username) => {
+    username = sanitizer.sanitize(username);
 
-module.exports = { registerUser, loginUser};
+    logger.info("Posting logout: Attempting to log out user: @" + username);
+
+    try {
+        database.connectDB();
+
+        const user = await User.findOne({ username });
+        if (!user) {
+            return responseFormatter.errorResponse(res, 400, "User not found", "Logout failed");
+        }
+
+        // Remove the session token
+        user.sessionToken = null;
+        await user.save();
+
+        responseFormatter.successResponse(res, 200, "Logout successful", "User session deleted");
+    } catch (error) {
+        logger.error("Server Error: " + error.message);
+        responseFormatter.errorResponse(res, 500, "Server Error", error.message);
+    }
+}
+
+
+module.exports = { registerUser, loginUser, logoutUser };

@@ -15,7 +15,6 @@ const registerLimiter = rateLimit({
     }
 });
 
-
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5,
@@ -26,15 +25,19 @@ const loginLimiter = rateLimit({
     }
 });
 
-router.post('/register', registerLimiter, function(req, res)
-{
+router.post('/register', registerLimiter, function(req, res) {
     const { name, username, password, email } = req.body;
     authController.registerUser(res, name, username, password, email);
-})
+});
 
-router.post('/login', loginLimiter, function(req, res)
-{
+router.post('/login', loginLimiter, function(req, res) {
     const { username, password } = req.body;
     authController.loginUser(res, username, password);
-})
-module.exports = router
+});
+
+router.post('/logout', function(req, res) {
+    const { username } = req.body;
+    authController.logoutUser(res, username);
+});
+
+module.exports = router;
