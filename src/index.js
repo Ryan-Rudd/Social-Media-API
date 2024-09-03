@@ -1,7 +1,7 @@
 // Main entry point of the application. Initializes the server and connects to the database.
 
 const express = require('express');
-const app = express();
+const router = express.Router();
 
 // Connect to the MongoDB database
 const db = require('./config/db');
@@ -9,11 +9,19 @@ const db = require('./config/db');
 // Logger function 
 const logger = require('./utils/logger');
 
+// Configure API
+const configs = require('./config/index')
+
 const entry = () => {
-    db.connectDB().then(()=>
-    {
+    db.connectDB().then(() => {
         logger.info('Connected to Mongo server');
-    })
+    });
 }
 
-module.exports = { entry }
+// Registers each module as an entry point
+const init = (app) => {
+    // AUTHENTICATION ROUTER
+    app.use(`${configs.versioning_segment}/auth`, require('./routes/authRoutes'))
+}
+
+module.exports = { entry, init }
