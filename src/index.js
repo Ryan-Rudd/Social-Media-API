@@ -22,6 +22,7 @@ const entry = () => {
 const init = (app) => {
     // AUTHENTICATION ROUTER
     app.use(`${configs.versioning_segment}/auth`, require('./routes/authRoutes'))
+    app.use(`${configs.versioning_segment}/users`, require('./routes/userRoutes'))
 }
 
 module.exports = { entry, init }
