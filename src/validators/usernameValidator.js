@@ -6,8 +6,6 @@ usernameSchema
     .is().min(3)                                    // Minimum length 3
     .is().max(30)                                   // Maximum length 30
     .has().not().spaces()                           // Should not have spaces
-    .has().not().symbols()                          // Should not have symbols
-    .has().not().digits()                           // Should not have digits
     .has().letters()                                // Must have letters
     .is().not().oneOf(['admin', 'root', 'user']);   // Blacklist these values
 
