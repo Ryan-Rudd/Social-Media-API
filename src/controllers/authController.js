@@ -5,6 +5,7 @@ const database = require('../config/db');
 const mongoose = require('mongoose');
 const pwValidate = require('../validators/passValidator');
 const usernameValidate = require('../validators/usernameValidator');
+const sanitizer = require('sanitizer');
 
 const logger = require('../utils/logger');
 
@@ -16,10 +17,16 @@ const logger = require('../utils/logger');
  * @param {string} email - The email for the new user.
 */
 const registerUser = async(res, name, username, password, email) => {
+
+    name = sanitizer.sanitize(name);
+    username = sanitizer.sanitize(username);
+    email = sanitizer.sanitize(email);
+    password = sanitizer.sanitize(password);
+
     // Validate the username
     let usernameValidation = await usernameValidate(username);
     if (usernameValidation.length > 0) {
-        return responseFormatter.errorResponse(res, 400, "Invalid Username", usernameValidation);
+        return responseFormatter.errorResponse(res, 400, "Invalid Username", usernameValidation[0].message);
     }
 
     // Validate the password
