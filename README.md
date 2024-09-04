@@ -25,8 +25,8 @@
 |                           | Manage Media                          | `/api/v1/media/:mediaId/manage`    |              |
 |                           | Add Tags to Post                      | `/api/v1/posts/:postId/tags`       |              |
 |                           | Get Posts by Tag                      | `/api/v1/tags/:tag`                |              |
-| **Athlete Specific**       | Add/Edit/Delete Player Stats          | `/api/v1/athletes/:athleteId/stats`|              |
-|                           | Get Player Stats                      | `/api/v1/athletes/:athleteId/stats`|              |
+| **Athlete Specific**       | Add/Edit/Delete Player Stats          | `/api/v1/athletes/:athleteId/stats`|        ✔️      |
+|                           | Get Player Stats                      | `/api/v1/athletes/:athleteId/stats`|        ✔️      |
 |                           | Create/Edit/Delete Showcase           | `/api/v1/athletes/:athleteId/showcases` |          |
 |                           | View Showcase                         | `/api/v1/showcases/:showcaseId`    |              |
 |                           | Add/Edit/Delete Achievements          | `/api/v1/athletes/:athleteId/achievements` |        |
