@@ -108,9 +108,7 @@ const followUnfollowUser = async (req, res, userId, targetUserId) => {
 const listFollowersFollowing = async (req, res, userId, listType) => {
     try {
         // Check if the logged-in user is the same as the user whose followers/following are being listed
-        if (req.user.id !== userId && req.user.role !== 'admin') {
-            return responseFormatter.errorResponse(res, 403, "You are not authorized to view this information");
-        }
+
 
         const user = await User.findById(userId).populate(listType, 'username name avatar');
         if (!user) {

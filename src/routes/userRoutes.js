@@ -15,52 +15,49 @@ const updateProfileLimiter = rateLimit({
     },
 });
 
-// Apply authMiddleware to all routes that require authentication
-router.use(authMiddleware);
-
 // Define the routes
 
 // Get User Profile
-router.get('/:userId', (req, res) => {
+router.get('/:userId', authMiddleware, (req, res) => {
     const { userId } = req.params;
     userController.getUserProfile(res, userId);
 });
 
 // Update User Profile
-router.put('/:userId/update', updateProfileLimiter, (req, res) => {
+router.put('/:userId/update', authMiddleware, updateProfileLimiter, (req, res) => {
     const { userId } = req.params;
     const updates = req.body;
     userController.updateUserProfile(req, res, userId, updates);
 });
 
 // Follow/Unfollow Users
-router.post('/:userId/follow', (req, res) => {
+router.post('/:userId/follow', authMiddleware, (req, res) => {
     const { userId } = req.params;
     const { targetUserId } = req.body; // ID of the user to follow/unfollow
     userController.followUnfollowUser(req, res, userId, targetUserId);
 });
 
-// List Followers/Following
+// List Followers/Following - No authMiddleware here
 router.get('/:userId/:listType(followers|following)', (req, res) => {
     const { userId, listType } = req.params;
     userController.listFollowersFollowing(req, res, userId, listType);
 });
 
 // Get Notifications
-router.get('/:userId/notifications', (req, res) => {
+router.get('/:userId/notifications', authMiddleware, (req, res) => {
     const { userId } = req.params;
     userController.getNotifications(req, res, userId);
 });
 
 // Mark Notifications as Read/Unread
-router.post('/:userId/notifications/mark', (req, res) => {
+router.post('/:userId/notifications/mark', authMiddleware, (req, res) => {
     const { userId } = req.params;
     const { notificationIds, isRead } = req.body;
     userController.markNotifications(req, res, userId, notificationIds, isRead);
 });
 
 // Manage User Preferences
-router.put('/:userId/preferences', (req, res) => {
+router.put('/:userId/preferences', authMiddleware, (req, res) => {
     const { userId } = req.params;
     const preferences = req.body;
     userController.manageUserPreferences(req, res, userId, preferences);

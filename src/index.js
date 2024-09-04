@@ -2,14 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-
-// Connect to the MongoDB database
 const db = require('./config/db');
-
-// Logger function 
 const logger = require('./utils/logger');
-
-// Configure API
 const configs = require('./config/index')
 
 const entry = () => {
@@ -18,11 +12,10 @@ const entry = () => {
     });
 }
 
-// Registers each module as an entry point
 const init = (app) => {
-    // AUTHENTICATION ROUTER
     app.use(`${configs.versioning_segment}/auth`, require('./routes/authRoutes'))
     app.use(`${configs.versioning_segment}/users`, require('./routes/userRoutes'))
+    app.use(`${configs.versioning_segment}/posts`, require('./routes/postRoutes'))
 }
 
 module.exports = { entry, init }
