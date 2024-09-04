@@ -16,6 +16,8 @@ const init = (app) => {
     app.use(`${configs.versioning_segment}/auth`, require('./routes/authRoutes'))
     app.use(`${configs.versioning_segment}/users`, require('./routes/userRoutes'))
     app.use(`${configs.versioning_segment}/posts`, require('./routes/postRoutes'))
+    app.use(`${configs.versioning_segment}/feed`, require('./routes/feedRoutes'))
+
 }
 
 module.exports = { entry, init }
