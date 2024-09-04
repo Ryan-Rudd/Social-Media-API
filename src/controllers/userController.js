@@ -3,6 +3,7 @@ const responseFormatter = require('../utils/responseFormatter');
 const logger = require('../utils/logger');
 const mongoose = require('mongoose');
 const sanitizer = require('sanitizer');
+const Post = require('../models/Post'); // Assuming you have a Post model
 
 /**
  * Get User Profile
@@ -208,6 +209,30 @@ const manageUserPreferences = async (req, res, userId, preferences) => {
     }
 };
 
+/**
+ * Get User's Posts
+ * @param {Object} req - The request object containing user information.
+ * @param {Object} res - The response object.
+ * @param {string} userId - The ID of the user whose posts are being retrieved.
+ */
+const getUserPosts = async (req, res, userId) => {
+    try {
+        // Find the user to ensure they exist
+        const user = await User.findById(userId);
+        if (!user) {
+            return responseFormatter.errorResponse(res, 404, "User not found");
+        }
+
+        // Find all posts by the user
+        const posts = await Post.find({ author: userId });
+
+        responseFormatter.successResponse(res, 200, "User posts retrieved successfully", posts);
+    } catch (error) {
+        logger.error("Server Error: " + error.message);
+        responseFormatter.errorResponse(res, 500, "Server Error", error.message);
+    }
+};
+
 module.exports = {
     getUserProfile,
     updateUserProfile,
@@ -215,5 +240,6 @@ module.exports = {
     listFollowersFollowing,
     getNotifications,
     markNotifications,
-    manageUserPreferences
+    manageUserPreferences,
+    getUserPosts
 };

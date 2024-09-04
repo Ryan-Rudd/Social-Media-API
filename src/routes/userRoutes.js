@@ -63,4 +63,11 @@ router.put('/:userId/preferences', authMiddleware, (req, res) => {
     userController.manageUserPreferences(req, res, userId, preferences);
 });
 
+
+// Get User's Posts
+router.get('/:userId/posts', (req, res) => {
+    const { userId } = req.params;
+    userController.getUserPosts(req, res, userId);
+});
+
 module.exports = router;
