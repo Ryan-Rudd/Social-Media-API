@@ -19,7 +19,7 @@
 |                           | Delete Comment                        | `/api/v1/posts/:postId/comments/:commentId/delete` | ✔️  |
 |                           | Share Post                            | `/api/v1/posts/:postId/share`      | ✔️            |
 |                           | Get User’s Posts                      | `/api/v1/users/:userId/posts`      |   ✔️           |
-|                           | Get Feed Posts                        | `/api/v1/feed`                     |              |
+|                       ✔️    | Get Feed Posts                        | `/api/v1/feed`                     |              |
 |                           | Upload Image                          | `/api/v1/media/upload/image`       |              |
 |                           | Upload Video                          | `/api/v1/media/upload/video`       |              |
 |                           | Manage Media                          | `/api/v1/media/:mediaId/manage`    |              |
