@@ -50,8 +50,6 @@ const userSchema = new mongoose.Schema({
     instagram: { type: String },
     linkedin: { type: String },
   },
-
-  // Array of ObjectId references to posts made by the user
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,7 +57,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the users that this user is following
   following: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -67,7 +64,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the users that follow this user
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -75,7 +71,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the showcases created by the user (if the user is an athlete)
   showcases: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -83,7 +78,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the achievements of the user (if the user is an athlete)
   achievements: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -91,7 +85,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the notifications for the user
   notifications: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -99,7 +92,6 @@ const userSchema = new mongoose.Schema({
     }
   ],
 
-  // Array of ObjectId references to the teams that the user is a part of
   teams: [
     {
       type: mongoose.Schema.Types.ObjectId,
