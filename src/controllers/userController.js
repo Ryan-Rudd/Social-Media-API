@@ -212,7 +212,8 @@ const manageUserPreferences = async (req, res, userId, preferences) => {
 /**
  * Get User's Posts
  * @param {Object} req - The request object containing user information.
- * @param {Object} res - The response object.
+ * @param {Object} res - The response
+ *  object.
  * @param {string} userId - The ID of the user whose posts are being retrieved.
  */
 const getUserPosts = async (req, res, userId) => {

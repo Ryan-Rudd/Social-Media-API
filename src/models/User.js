@@ -91,7 +91,10 @@ const userSchema = new mongoose.Schema({
       ref: 'Notification',
     }
   ],
-
+  athleteProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Athlete',
+  },
   teams: [
     {
       type: mongoose.Schema.Types.ObjectId,
