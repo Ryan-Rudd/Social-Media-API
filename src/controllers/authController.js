@@ -151,5 +151,95 @@ const logoutUser = async(res, username) => {
     }
 }
 
+/**
+ * Sends a password reset link to the user's email.
+ * @param {Object} res - The response object.
+ * @param {string} email - The email of the user requesting password reset.
+ */
+const requestPasswordReset = async (res, email) => {
+    email = sanitizer.sanitize(email);
+
+    logger.info("Posting password reset request: " + email);
+
+    try {
+        database.connectDB();
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return responseFormatter.errorResponse(res, 404, "User not found", "No account registered with that email");
+        }
+
+        const payload = {
+            user: {
+                id: user._id,
+                username: user.username,
+            }
+        };
+
+        // Generate reset token
+        const resetToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Save the reset token in user's record
+        user.resetToken = resetToken;
+        await user.save();
+
+        // Send email (assuming you have a mailer utility)
+        const resetUrl = `${process.env.CLIENT_URL}/password-reset/${resetToken}`;
+        // mailer.sendResetEmail(user.email, resetUrl); // Uncomment and use mailer service
+
+        responseFormatter.successResponse(res, 200, "Password reset link sent to email", "Check your inbox for the reset link");
+    } catch (error) {
+        logger.error("Server Error: " + error.message);
+        responseFormatter.errorResponse(res, 500, "Server Error", error.message);
+    }
+}
+
+
+
+/**
+ * Resets the user's password using the reset token.
+ * @param {Object} res - The response object.
+ * @param {string} token - The password reset token.
+ * @param {string} newPassword - The new password for the user.
+ */
+const resetPassword = async (res, token, newPassword) => {
+
+    newPassword = sanitizer.sanitize(newPassword);
+
+    try {
+        database.connectDB();
+
+        // Verify reset token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findOne({ _id: decoded.user.id, resetToken: token });
+        if (!user) {
+            return responseFormatter.errorResponse(res, 400, "Invalid or expired token", "Password reset failed");
+        }
+
+        // Validate new password
+        let passwordValidation = await pwValidate(newPassword);
+        if (passwordValidation.length > 0) {
+            return responseFormatter.errorResponse(res, 400, "Invalid Password", passwordValidation);
+        }
+
+        // Hash new password and save
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+
+        // Clear reset token
+        user.resetToken = null;
+        await user.save();
+
+        responseFormatter.successResponse(res, 200, "Password reset successful", "You can now log in with your new password");
+    } catch (error) {
+        logger.error("Server Error: " + error.message);
+        responseFormatter.errorResponse(res, 500, "Server Error", error.message);
+    }
+}
+
+module.exports = { requestPasswordReset, resetPassword };
+
+
+
 
 module.exports = { registerUser, loginUser, logoutUser };
